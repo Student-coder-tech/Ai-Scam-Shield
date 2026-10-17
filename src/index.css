@@ -1,0 +1,194 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+/* Base theme transitions */
+html {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Custom scrollbars for light and dark modes */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* ============================================================
+   Hero background grid pattern (shared across themes)
+   ============================================================ */
+.hero-grid {
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+}
+.dark .hero-grid {
+  background-image: radial-gradient(#1e293b 1px, transparent 1px);
+}
+
+/* Risk gauge stroke colors — defaults keep Theme 1 / Theme 2 exact */
+:root {
+  --risk-high: #ef4444;
+  --risk-medium: #f59e0b;
+  --risk-safe: #16a34a;
+}
+
+/* ============================================================
+   THEME 3 — Classic Cream & Navy
+   Applied through the `theme-classic` class on <html>.
+   Only design tokens are overridden here, so Theme 1 and
+   Theme 2 keep their original look when re-selected.
+   ============================================================ */
+.theme-classic {
+  /* ---- Surfaces: warm cream / soft beige ramp ---- */
+  --color-slate-50: #faf7f2; /* page background */
+  --color-slate-100: #f3ede4;
+  --color-slate-200: #e7ded2; /* borders & dividers */
+  --color-slate-300: #d8cdbd;
+  --color-slate-400: #9a9086;
+  --color-slate-500: #6b625a; /* secondary text */
+  --color-slate-600: #6b625a; /* secondary text */
+  --color-slate-700: #6b625a; /* descriptions & labels */
+  --color-slate-800: #33302b;
+  --color-slate-900: #2b2622; /* primary text */
+  --color-slate-950: #1c1917;
+
+  /* ---- Primary accent: deep navy ---- */
+  --color-blue-50: #eaf0f7; /* active / selected pale blue */
+  --color-blue-100: #e3eaf4;
+  --color-blue-200: #d3ddeb;
+  --color-blue-300: #9db1cd;
+  --color-blue-400: #4e6e99;
+  --color-blue-500: #294b78; /* hover state */
+  --color-blue-600: #1f3a5f; /* primary buttons / links */
+  --color-blue-700: #16304f;
+  --color-blue-900: #16304f;
+  --color-blue-950: #10233a;
+
+  --color-sky-50: #eaf0f7;
+  --color-sky-100: #e3eaf4;
+  --color-sky-200: #d3ddeb;
+  --color-sky-300: #9db1cd;
+  --color-sky-400: #4e6e99;
+  --color-sky-500: #294b78;
+  --color-sky-600: #1f3a5f;
+  --color-sky-700: #16304f;
+  --color-sky-900: #16304f;
+
+  --color-cyan-300: #9db1cd;
+  --color-cyan-400: #4e6e99;
+  --color-cyan-500: #1f3a5f;
+
+  --color-teal-50: #eaf0f7;
+  --color-teal-100: #e3eaf4;
+  --color-teal-200: #d3ddeb;
+  --color-teal-300: #9db1cd;
+  --color-teal-400: #294b78; /* logo gradient end */
+  --color-teal-500: #1f3a5f; /* CTA gradient end */
+  --color-teal-600: #1f3a5f;
+  --color-teal-700: #16304f;
+  --color-teal-800: #10233a;
+  --color-teal-900: #0b1b2e;
+  --color-teal-950: #081422;
+
+  --color-indigo-500: #294b78;
+  --color-purple-500: #294b78;
+
+  /* ---- Success indicators (security results only) ---- */
+  --color-green-50: #e9f4ef;
+  --color-green-100: #e9f4ef;
+  --color-green-200: #c9e4d7;
+  --color-green-300: #a8d3c0;
+  --color-green-400: #2e9568;
+  --color-green-500: #237a57;
+  --color-green-600: #237a57;
+  --color-green-700: #1a6249;
+  --color-green-800: #154f3a;
+  --color-green-900: #0f3d2d;
+  --color-green-950: #0a2b1f;
+
+  --color-emerald-50: #e9f4ef;
+  --color-emerald-200: #c9e4d7;
+  --color-emerald-400: #2e9568;
+  --color-emerald-500: #237a57;
+  --color-emerald-600: #1a6249;
+  --color-emerald-700: #154f3a;
+
+  /* ---- Warning indicators ---- */
+  --color-amber-50: #fbf2e0;
+  --color-amber-100: #f6e7cb;
+  --color-amber-200: #efdcb4;
+  --color-amber-300: #dcb668;
+  --color-amber-400: #c9962e;
+  --color-amber-500: #b7791f;
+  --color-amber-600: #b7791f;
+  --color-amber-700: #9c6518;
+  --color-amber-800: #855514;
+
+  --color-orange-400: #c9962e;
+  --color-orange-500: #b7791f;
+
+  /* ---- Danger indicators ---- */
+  --color-red-50: #faeaea;
+  --color-red-100: #f6dede;
+  --color-red-200: #efcfcf;
+  --color-red-300: #de8a8a;
+  --color-red-400: #c94e4e;
+  --color-red-500: #b83232;
+  --color-red-600: #b83232;
+  --color-red-700: #9e2a2a;
+  --color-red-800: #7e2020;
+  --color-red-900: #6b1c1c;
+  --color-red-950: #4a1212;
+
+  /* ---- Risk gauge strokes ---- */
+  --risk-high: #b83232;
+  --risk-medium: #b7791f;
+  --risk-safe: #237a57;
+}
+.theme-classic ::-webkit-scrollbar-thumb {
+  background: #e7ded2;
+}
+.theme-classic ::-webkit-scrollbar-thumb:hover {
+  background: #d8cdbd;
+}
+
+/* ---- Sidebar surface: cream panel with beige divider ---- */
+.theme-classic .sidebar-surface {
+  background-color: #faf7f2;
+}
+
+/* ---- Hero grid dots in warm beige ---- */
+.theme-classic .hero-grid {
+  background-image: radial-gradient(#e7ded2 1px, transparent 1px);
+}

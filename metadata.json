@@ -1,0 +1,6 @@
+{
+  "name": "AI Scam Shield",
+  "description": "Detect the Scam. Protect Your Money. AI-powered scam and fraud detection for messages, links, UPI QR codes, and audio calls in English, Hindi, and Marathi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
