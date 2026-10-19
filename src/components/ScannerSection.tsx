@@ -39,6 +39,9 @@ export const ScannerSection: React.FC<ScannerSectionProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [currentResult, setCurrentResult] = useState<ScanResult | null>(null);
 
+  // Track the active scan so we can cancel it when the user switches tabs.
+  const activeScanRef = useRef<{ cancelled: boolean }>({ cancelled: false });
+
   // Tab 1: Message state
   const [messageText, setMessageText] = useState('');
 
@@ -209,21 +212,26 @@ export const ScannerSection: React.FC<ScannerSectionProps> = ({
       return;
     }
 
+    const scanToken = { cancelled: false };
+    activeScanRef.current = scanToken;
+
     try {
       setError(null);
       setLoading(true);
       setLoadingStep(t.scanner.message.analyzing);
       const result = await api.analyzeMessage(textToScan, language);
+      if (scanToken.cancelled) return;
       setCurrentResult(result);
       onScanCompleted(result);
       setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     } catch (err: unknown) {
+      if (scanToken.cancelled) return;
       const msg = err instanceof Error ? err.message : 'Analysis failed';
       setError(msg);
     } finally {
-      setLoading(false);
+      if (!scanToken.cancelled) setLoading(false);
     }
   };
 
@@ -234,21 +242,26 @@ export const ScannerSection: React.FC<ScannerSectionProps> = ({
       return;
     }
 
+    const scanToken = { cancelled: false };
+    activeScanRef.current = scanToken;
+
     try {
       setError(null);
       setLoading(true);
       setLoadingStep(t.scanner.url.analyzing);
       const result = await api.analyzeUrl(urlToScan, language);
+      if (scanToken.cancelled) return;
       setCurrentResult(result);
       onScanCompleted(result);
       setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     } catch (err: unknown) {
+      if (scanToken.cancelled) return;
       const msg = err instanceof Error ? err.message : 'URL analysis failed';
       setError(msg);
     } finally {
-      setLoading(false);
+      if (!scanToken.cancelled) setLoading(false);
     }
   };
 
@@ -258,21 +271,26 @@ export const ScannerSection: React.FC<ScannerSectionProps> = ({
       return;
     }
 
+    const scanToken = { cancelled: false };
+    activeScanRef.current = scanToken;
+
     try {
       setError(null);
       setLoading(true);
       setLoadingStep(t.scanner.qr.analyzing);
       const result = await api.analyzeQr(payloadToScan, language);
+      if (scanToken.cancelled) return;
       setCurrentResult(result);
       onScanCompleted(result);
       setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     } catch (err: unknown) {
+      if (scanToken.cancelled) return;
       const msg = err instanceof Error ? err.message : 'QR analysis failed';
       setError(msg);
     } finally {
-      setLoading(false);
+      if (!scanToken.cancelled) setLoading(false);
     }
   };
 
@@ -281,21 +299,26 @@ export const ScannerSection: React.FC<ScannerSectionProps> = ({
     transcriptText?: string;
     mimeType?: string;
   }) => {
+    const scanToken = { cancelled: false };
+    activeScanRef.current = scanToken;
+
     try {
       setError(null);
       setLoading(true);
       setLoadingStep(t.scanner.audio.analyzing);
       const result = await api.analyzeAudio(payload, language);
+      if (scanToken.cancelled) return;
       setCurrentResult(result);
       onScanCompleted(result);
       setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     } catch (err: unknown) {
+      if (scanToken.cancelled) return;
       const msg = err instanceof Error ? err.message : 'Audio analysis failed';
       setError(msg);
     } finally {
-      setLoading(false);
+      if (!scanToken.cancelled) setLoading(false);
     }
   };
 
@@ -394,6 +417,9 @@ export const ScannerSection: React.FC<ScannerSectionProps> = ({
             onClick={() => {
               setActiveTab('message');
               setError(null);
+              // Cancel any in-progress scan when switching tabs
+              activeScanRef.current = { cancelled: true };
+              setLoading(false);
             }}
             className={`flex flex-col items-center justify-center p-3 rounded-xl text-center transition-all cursor-pointer ${
               activeTab === 'message'
@@ -412,6 +438,8 @@ export const ScannerSection: React.FC<ScannerSectionProps> = ({
             onClick={() => {
               setActiveTab('url');
               setError(null);
+              activeScanRef.current = { cancelled: true };
+              setLoading(false);
             }}
             className={`flex flex-col items-center justify-center p-3 rounded-xl text-center transition-all cursor-pointer ${
               activeTab === 'url'
@@ -430,6 +458,8 @@ export const ScannerSection: React.FC<ScannerSectionProps> = ({
             onClick={() => {
               setActiveTab('qr');
               setError(null);
+              activeScanRef.current = { cancelled: true };
+              setLoading(false);
             }}
             className={`flex flex-col items-center justify-center p-3 rounded-xl text-center transition-all cursor-pointer ${
               activeTab === 'qr'
@@ -448,6 +478,8 @@ export const ScannerSection: React.FC<ScannerSectionProps> = ({
             onClick={() => {
               setActiveTab('audio');
               setError(null);
+              activeScanRef.current = { cancelled: true };
+              setLoading(false);
             }}
             className={`flex flex-col items-center justify-center p-3 rounded-xl text-center transition-all cursor-pointer ${
               activeTab === 'audio'

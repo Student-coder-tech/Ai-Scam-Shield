@@ -87,10 +87,19 @@ export const CommunityReportsSection: React.FC<CommunityReportsProps> = ({ langu
     }
   };
 
-  const handleUpvote = (id: string) => {
+  const handleUpvote = async (id: string) => {
+    // Optimistic UI update
     setReports((prev) =>
       prev.map((r) => (r.id === id ? { ...r, upvotes: r.upvotes + 1 } : r))
     );
+    try {
+      await api.upvoteReport(id);
+    } catch {
+      // Revert optimistic update on failure
+      setReports((prev) =>
+        prev.map((r) => (r.id === id ? { ...r, upvotes: Math.max(0, r.upvotes - 1) } : r))
+      );
+    }
   };
 
   const scamCategories = [
